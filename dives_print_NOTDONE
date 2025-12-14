@@ -9,6 +9,16 @@ def diver_1():
     country=input("Ingrese el pais del clavadista: ")
     return name,country
 
+def diver_preset():
+    name="Diver_1"
+    country="Country_1"
+
+    return name,country
+
+def format_scores(score):
+    return f"{score:.2f}"
+
+
 def dive_difficulty():
     probs=np.array([5,10,15,30,20,15,5])
 
@@ -31,7 +41,9 @@ def dive_difficulty():
             diff=np.arange(4.5,4.7,0.1)
 
     difficulty= np.random.choice(diff)
-    return difficulty
+
+    difficulty=format_scores(difficulty)
+    return float(difficulty)
 
 
 def weighter(values):
@@ -41,22 +53,23 @@ def weighter(values):
 
     match choice:
         case 0:
-            diff=np.arange(1.4,1.9,0.1)
+            diff=np.arange(0,2.0,0.1)
         case 1: 
-            diff=np.arange(2.0,2.5,0.1)
+            diff=np.arange(2.0,4.0,0.1)
         case 2:
-            diff=np.arange(2.5,3.0,0.1)
+            diff=np.arange(4.0,5.5,0.1)
         case 3: 
-            diff=np.arange(3.0,3.5,0.1)
+            diff=np.arange(5.5,6.5,0.1)
         case 4:
-            diff=np.arange(3.5,4.0,0.1)
+            diff=np.arange(6.5,8.5,0.1)
         case 5: 
-            diff=np.arange(4.0,4.5,0.1)
+            diff=np.arange(8.5,9.0,0.1)
         case 6: 
-            diff=np.arange(4.5,4.7,0.1)
+            diff=np.arange(9.0,10.0,0.1)
 
     difficulty= np.random.choice(diff)
-    return difficulty
+    difficulty= format_scores(difficulty)
+    return float(difficulty)
 
 def scores(difficulty):
 
@@ -73,74 +86,84 @@ def scores(difficulty):
         values=[5,8,17,20,30,15,5]
     
     elif difficulty >= 3.5 and difficulty <4.0:
-        values=[5,8,17,20,30,15,5]
+        values=[7,10,13,15,30,20,5]
 
     elif difficulty >= 4.0 and difficulty <4.5:
-        values=[5,8,17,20,30,15,5]
+        values=[5,8,12,15,20,30,10]
     
     else: 
-        values=[5,8,17,20,30,15,5]
+        values=[3,5,7,10,15,20,40]
 
     score=weighter(values)
-    return score
+    score=format_scores(score)
+    return float(score)
 
 def next_score(score): 
-    probs=np.array([15,15,15,12,12,8,7,5,5,3,3])
-    choice=np.random.choice(11,p=probs/100)
+    if score<2.5:
+        probs=np.array([15,15,15,12,12,8,7,5,5,3,3])
+        choice=np.random.choice(11,p=probs/100)
 
-    match choice:
-        case 0:
-            newscore=score
-        case 1: 
-            newscore=score+0.5
-        case 2:
-            newscore=score-0.5
-        case 3: 
-            newscore=score+1
-        case 4:
-            newscore=score-1
-        case 5: 
-            newscore=score+1.5
-        case 6: 
-            newscore=score-1.5
-        case 7: 
-            newscore=score+2
-        case 8: 
-            newscore=score-2
-        case 9:
-            newscore=score+2.5
-        case 10: 
-            newscore=score-2.5
-
-    return newscore  
+        match choice:
+            case 0:
+                newscore=score
+            case 1: 
+                newscore=score+0.5
+            case 2:
+                newscore=score-0.5
+            case 3: 
+                newscore=score+1
+            case 4:
+                newscore=score-1
+            case 5: 
+                newscore=score+1.5
+            case 6: 
+                newscore=score-1.5
+            case 7: 
+                newscore=score+2
+            case 8: 
+                newscore=score-2
+            case 9:
+                newscore=score+2.5
+            case 10: 
+                newscore=score-2.5
+    else: 
+        newscore=score
+    
+    newscore=format_scores(newscore)
+    return float(newscore)  
 
 def sum_scores(score_array):
     min_score=min(score_array)
     max_score=max(score_array)
     sum_scores=sum(score_array)
     total=sum_scores - min_score - max_score
-    
-    return total
+    total=format_scores(total)
+
+    return float(total)
 
 def final_score(total,difficulty):
     final_score= total*difficulty
-    return final_score
+    final_score=format_scores(final_score)
+
+    return float(final_score)
+
 
 
 def main(): 
 
     greeting()
-    name,country=diver_1()
+    name,country=diver_preset()
+    print("Clavadista: ",name," Pais: ",country)
     dives=[]
-    score_list=[]
+    
     for i in range(5): 
+        score_list=[]
         dive=dive_difficulty()
         dives.append(dive)
-        print(dive)
-    
+        print("Difficulty: ",dive)
         score=scores(dive)
         score_list.append(score)
-        for i in range (6):
+        for j in range (6):
             score=next_score(score)
             score_list.append(score)
         
@@ -148,8 +171,9 @@ def main():
         score_list.append(total_sum)
         total_score=final_score(total_sum,dive)
         score_list.append(total_score)
-        print(total_sum)
-        print(total_score)
+        print("Scores: ",score_list)
+
+
 
 
 main()
