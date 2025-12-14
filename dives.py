@@ -76,13 +76,55 @@ def scores(difficulty):
         values=[5,8,17,20,30,15,5]
 
     elif difficulty >= 4.0 and difficulty <4.5:
-        values[5,8,17,20,30,15,5]
+        values=[5,8,17,20,30,15,5]
     
     else: 
         values=[5,8,17,20,30,15,5]
 
     score=weighter(values)
     return score
+
+def next_score(score): 
+    probs=np.array([15,15,15,12,12,8,7,5,5,3,3])
+    choice=np.random.choice(11,p=probs/100)
+
+    match choice:
+        case 0:
+            newscore=score
+        case 1: 
+            newscore=score+0.5
+        case 2:
+            newscore=score-0.5
+        case 3: 
+            newscore=score+1
+        case 4:
+            newscore=score-1
+        case 5: 
+            newscore=score+1.5
+        case 6: 
+            newscore=score-1.5
+        case 7: 
+            newscore=score+2
+        case 8: 
+            newscore=score-2
+        case 9:
+            newscore=score+2.5
+        case 10: 
+            newscore=score-2.5
+
+    return newscore  
+
+def sum_scores(score_array):
+    min_score=min(score_array)
+    max_score=max(score_array)
+    sum_scores=sum(score_array)
+    total=sum_scores - min_score - max_score
+    
+    return total
+
+def final_score(total,difficulty):
+    final_score= total*difficulty
+    return final_score
 
 
 def main(): 
@@ -94,9 +136,20 @@ def main():
     for i in range(5): 
         dive=dive_difficulty()
         dives.append(dive)
-
-        for i in range(7): 
-            score=scores(dive)
+        print(dive)
+    
+        score=scores(dive)
+        score_list.append(score)
+        for i in range (6):
+            score=next_score(score)
             score_list.append(score)
+        
+        total_sum=sum_scores(score_list)
+        score_list.append(total_sum)
+        total_score=final_score(total_sum,dive)
+        score_list.append(total_score)
+        print(total_sum)
+        print(total_score)
+
 
 main()
